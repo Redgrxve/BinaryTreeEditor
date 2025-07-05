@@ -9,19 +9,26 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    BinaryTree tree;
-    tree.insert(5);
-    tree.insert(3);
-    tree.insert(7);
-    tree.insert(2);
-    tree.insert(4);
-    tree.insert(8);
+    m_tree = new BinaryTree;
+    m_tree->insert(5);
+    m_tree->insert(3);
+    m_tree->insert(7);
+    m_tree->insert(2);
+    m_tree->insert(4);
+    m_tree->insert(8);
+    m_tree->insert(9);
+    m_tree->insert(-1);
+    m_tree->insert(-3);
+    m_tree->insert(10);
+    m_tree->insert(12);
+    m_tree->insert(11);
 
-    ui->treeView->setTree(tree);
+    ui->treeView->setTree(m_tree);
     ui->treeView->drawTree();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete m_tree;
 }

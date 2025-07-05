@@ -9,6 +9,8 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+class BinaryTree;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -19,5 +21,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    BinaryTree *m_tree;
 };
 #endif // MAINWINDOW_H

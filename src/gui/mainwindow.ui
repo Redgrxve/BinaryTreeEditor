@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Редактор бинарных деревьев</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -29,22 +29,29 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu">
+   <widget class="QMenu" name="fileMenu">
     <property name="title">
      <string>Файл</string>
     </property>
     <addaction name="createReportAction"/>
     <addaction name="saveAsAction"/>
    </widget>
-   <widget class="QMenu" name="menu_2">
+   <widget class="QMenu" name="toolsMenu">
     <property name="title">
      <string>Инструменты</string>
     </property>
     <addaction name="addNodeAction"/>
     <addaction name="removeNodeAction"/>
    </widget>
-   <addaction name="menu"/>
-   <addaction name="menu_2"/>
+   <widget class="QMenu" name="editMenu">
+    <property name="title">
+     <string>Правка</string>
+    </property>
+    <addaction name="paramsAction"/>
+   </widget>
+   <addaction name="fileMenu"/>
+   <addaction name="toolsMenu"/>
+   <addaction name="editMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -62,6 +69,8 @@
    <addaction name="separator"/>
    <addaction name="addNodeAction"/>
    <addaction name="removeNodeAction"/>
+   <addaction name="separator"/>
+   <addaction name="paramsAction"/>
   </widget>
   <action name="createReportAction">
    <property name="icon">
@@ -69,6 +78,9 @@
    </property>
    <property name="text">
     <string>Создать отчет</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
    </property>
   </action>
   <action name="saveAsAction">
@@ -102,6 +114,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Del</string>
+   </property>
+  </action>
+  <action name="paramsAction">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
+   </property>
+   <property name="text">
+    <string>Параметры отрисовки</string>
    </property>
   </action>
  </widget>

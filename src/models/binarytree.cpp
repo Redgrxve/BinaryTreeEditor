@@ -1,15 +1,10 @@
 #include "binarytree.h"
+#include <qminmax.h>
 
 BinaryTree::BinaryTree(int root)
-    : m_root(new TreeNode(root))
-{
+    : m_root(new TreeNode(root)) {}
 
-}
-
-BinaryTree::~BinaryTree()
-{
-
-}
+BinaryTree::~BinaryTree() {}
 
 bool BinaryTree::insert(int value)
 {
@@ -45,6 +40,11 @@ bool BinaryTree::remove(int value)
     bool isFound = false;
     m_root = removeRecursive(m_root, value, isFound);
     return isFound;
+}
+
+int BinaryTree::depth() const
+{
+    return getDepthRecursive(m_root);
 }
 
 TreeNode *BinaryTree::insertRecursive(TreeNode *node, int value)
@@ -90,7 +90,7 @@ TreeNode *BinaryTree::removeRecursive(TreeNode *node, int value, bool &isFound)
     return node;
 }
 
-TreeNode *BinaryTree::findMin(TreeNode *node)
+TreeNode *BinaryTree::findMin(TreeNode *node) const
 {
     if (!node)
         return nullptr;
@@ -101,7 +101,7 @@ TreeNode *BinaryTree::findMin(TreeNode *node)
     return node;
 }
 
-TreeNode *BinaryTree::findNode(TreeNode *node, int value)
+TreeNode *BinaryTree::findNode(TreeNode *node, int value) const
 {
     if (!node)
         return nullptr;
@@ -118,7 +118,7 @@ TreeNode *BinaryTree::findNode(TreeNode *node, int value)
     return node;
 }
 
-std::pair<TreeNode *, TreeNode *> BinaryTree::findNodeAndParent(TreeNode *node, TreeNode *parent, int value)
+std::pair<TreeNode *, TreeNode *> BinaryTree::findNodeAndParent(TreeNode *node, TreeNode *parent, int value) const
 {
     if (!node)
         return {nullptr, nullptr};
@@ -133,4 +133,11 @@ std::pair<TreeNode *, TreeNode *> BinaryTree::findNodeAndParent(TreeNode *node, 
     }
 
     return {node, parent};
+}
+
+int BinaryTree::getDepthRecursive(TreeNode *node) const
+{
+    if (!node) return 0;
+
+    return 1 + qMax(getDepthRecursive(node->left), getDepthRecursive(node->right));
 }

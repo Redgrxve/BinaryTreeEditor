@@ -14,7 +14,7 @@ CustomGraphicsView::CustomGraphicsView(QWidget *parent)
 
 void CustomGraphicsView::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton) {
+    if (event->button() == Qt::MiddleButton) {
         m_isDragging = true;
         m_lastMousePos = event->pos();
         setCursor(Qt::ClosedHandCursor);
@@ -35,7 +35,7 @@ void CustomGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
 void CustomGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton) {
+    if (event->button() == Qt::MiddleButton) {
         m_isDragging = false;
         setCursor(Qt::ArrowCursor);
     }

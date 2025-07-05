@@ -1,5 +1,8 @@
 #include "treeview.h"
+#include "treenodeitem.h"
 #include "treescene.h"
+
+#include <QKeyEvent>
 
 TreeView::TreeView(QWidget *parent)
     : CustomGraphicsView(parent)
@@ -8,7 +11,25 @@ TreeView::TreeView(QWidget *parent)
     setScene(scene);
 }
 
+void TreeView::setTree(BinaryTree *tree)
+{
+    treeScene()->setTree(tree);
+}
+
 void TreeView::drawTree()
 {
-    m_scene->drawTree(m_tree.root());
+    treeScene()->drawTree();
+}
+
+void TreeView::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Delete)
+        treeScene()->deleteSelectedNodes();
+    else
+        CustomGraphicsView::keyPressEvent(event);
+}
+
+TreeScene *TreeView::treeScene() const
+{
+    return static_cast<TreeScene *>(scene());
 }

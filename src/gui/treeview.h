@@ -11,12 +11,14 @@ class TreeView : public CustomGraphicsView
 public:
     explicit TreeView(QWidget *parent = nullptr);
 
-    void setTree(const BinaryTree &tree) { m_tree = tree; }
+    void setTree(BinaryTree *tree);
     void drawTree();
 
+protected:
+    void keyPressEvent(QKeyEvent* event);
+
 private:
-    TreeScene *m_scene;
-    BinaryTree m_tree;
+    TreeScene *treeScene() const;
 };
 
 #endif // TREEVIEW_H

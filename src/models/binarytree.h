@@ -18,10 +18,12 @@ public:
     BinaryTree(int root);
     ~BinaryTree();
 
-    TreeNode *root() const { return m_root; }
+    inline TreeNode *root() const { return m_root; }
 
     bool insert(int value);
     bool remove(int value);
+
+    int depth() const;
 
 private:
     TreeNode *m_root = nullptr;
@@ -29,9 +31,11 @@ private:
     TreeNode *insertRecursive(TreeNode *node, int value);
     TreeNode *removeRecursive(TreeNode *node, int value, bool &isFound);
 
-    TreeNode *findMin(TreeNode *parent);
-    TreeNode *findNode(TreeNode *current, int value);
-    std::pair<TreeNode *, TreeNode *> findNodeAndParent(TreeNode *current, TreeNode *parent, int value);
+    TreeNode *findMin(TreeNode *parent) const;
+    TreeNode *findNode(TreeNode *current, int value) const;
+    std::pair<TreeNode *, TreeNode *> findNodeAndParent(TreeNode *current, TreeNode *parent, int value) const;
+
+    int getDepthRecursive(TreeNode* node) const;
 };
 
 #endif // BINARYTREE_H
