@@ -12,10 +12,8 @@ public:
     explicit TreeView(QWidget *parent = nullptr);
 
     void setTree(BinaryTree *tree);
-    void drawTree();
-
-protected:
-    void keyPressEvent(QKeyEvent* event);
+    void updateScene();
+    void deleteSelectedNodes();
 
 private:
     TreeScene *treeScene() const;

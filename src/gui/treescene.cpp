@@ -5,13 +5,19 @@ TreeScene::TreeScene(QObject *parent)
     : QGraphicsScene{parent}
 {}
 
-void TreeScene::update()
+void TreeScene::setTree(BinaryTree *tree)
 {
-    clear();
-    drawTree();
+    m_tree = tree;
+    redraw();
 }
 
-void TreeScene::drawTree()
+void TreeScene::redraw()
+{
+    clear();
+    draw();
+}
+
+void TreeScene::draw()
 {
     if (!m_tree) return;
 
@@ -70,5 +76,5 @@ void TreeScene::deleteSelectedNodes()
         delete nodeItem;
     }
 
-    update();
+    redraw();
 }

@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 
 #include <QGraphicsEllipseItem>
+#include <QInputDialog>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -9,26 +11,37 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    m_tree = new BinaryTree;
-    m_tree->insert(5);
-    m_tree->insert(3);
-    m_tree->insert(7);
-    m_tree->insert(2);
-    m_tree->insert(4);
-    m_tree->insert(8);
-    m_tree->insert(9);
-    m_tree->insert(-1);
-    m_tree->insert(-3);
-    m_tree->insert(10);
-    m_tree->insert(12);
-    m_tree->insert(11);
-
-    ui->treeView->setTree(m_tree);
-    ui->treeView->drawTree();
+    connect(ui->addNodeAction, &QAction::triggered,
+            this, &MainWindow::onAddNodeTriggered);
+    connect(ui->removeNodeAction, &QAction::triggered,
+            this, &MainWindow::onRemoveNodeTriggered);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
     delete m_tree;
+}
+
+void MainWindow::onAddNodeTriggered()
+{
+    bool ok = false;
+    int value = QInputDialog::getInt(this, tr("Вставка нового узла"), tr("Значение: "), 0, INT_MIN, INT_MAX, 1, &ok);
+    if (!ok) return;
+
+    if (!m_tree) {
+        m_tree = new BinaryTree(value);
+        ui->treeView->setTree(m_tree);
+        return;
+    }
+
+    if (!m_tree->insert(value))
+        QMessageBox::critical(this, tr("Ошибка при вставке значения"), tr("Данное значение уже есть в дереве!"));
+    else
+        ui->treeView->updateScene();
+}
+
+void MainWindow::onRemoveNodeTriggered()
+{
+    ui->treeView->deleteSelectedNodes();
 }

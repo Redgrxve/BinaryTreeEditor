@@ -33,8 +33,9 @@
     <property name="title">
      <string>Файл</string>
     </property>
-    <addaction name="createReportAction"/>
+    <addaction name="openAction"/>
     <addaction name="saveAsAction"/>
+    <addaction name="createReportAction"/>
    </widget>
    <widget class="QMenu" name="toolsMenu">
     <property name="title">
@@ -49,14 +50,20 @@
     </property>
     <addaction name="paramsAction"/>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Справка</string>
+    </property>
+   </widget>
    <addaction name="fileMenu"/>
    <addaction name="toolsMenu"/>
    <addaction name="editMenu"/>
+   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
-    <string>toolBar</string>
+    <string>Панель инструментов</string>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -64,8 +71,9 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="createReportAction"/>
+   <addaction name="openAction"/>
    <addaction name="saveAsAction"/>
+   <addaction name="createReportAction"/>
    <addaction name="separator"/>
    <addaction name="addNodeAction"/>
    <addaction name="removeNodeAction"/>
@@ -74,7 +82,7 @@
   </widget>
   <action name="createReportAction">
    <property name="icon">
-    <iconset theme="QIcon::ThemeIcon::DocumentPageSetup"/>
+    <iconset theme="QIcon::ThemeIcon::DocumentOpen"/>
    </property>
    <property name="text">
     <string>Создать отчет</string>
@@ -90,8 +98,25 @@
    <property name="text">
     <string>Сохранить как...</string>
    </property>
+   <property name="toolTip">
+    <string>Сохранить как...</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="paramsAction">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
+   </property>
+   <property name="text">
+    <string>Настройки</string>
+   </property>
+   <property name="toolTip">
+    <string>Настройки</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+O</string>
    </property>
   </action>
   <action name="addNodeAction">
@@ -100,6 +125,9 @@
    </property>
    <property name="text">
     <string>Вставить узел</string>
+   </property>
+   <property name="toolTip">
+    <string>Вставить новый узел</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+A</string>
@@ -112,16 +140,25 @@
    <property name="text">
     <string>Удалить узел</string>
    </property>
+   <property name="toolTip">
+    <string>Удалить выбранные узлы</string>
+   </property>
    <property name="shortcut">
-    <string>Ctrl+Del</string>
+    <string>Del</string>
    </property>
   </action>
-  <action name="paramsAction">
+  <action name="openAction">
    <property name="icon">
-    <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
+    <iconset theme="folder-open"/>
    </property>
    <property name="text">
-    <string>Параметры отрисовки</string>
+    <string>Открыть...</string>
+   </property>
+   <property name="toolTip">
+    <string>Загрузить дерево из файла</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
  </widget>

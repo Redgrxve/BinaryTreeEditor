@@ -25,9 +25,10 @@ protected:
 
 private:
     void setupColors();
+    void setupText();
 
-    TreeNode *m_node;
-    QGraphicsTextItem *m_textItem;
+    TreeNode *m_node{};
+    QGraphicsTextItem *m_textItem{};
 
     qreal m_width  = 40.0;
     qreal m_height = 40.0;

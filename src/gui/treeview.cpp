@@ -16,17 +16,14 @@ void TreeView::setTree(BinaryTree *tree)
     treeScene()->setTree(tree);
 }
 
-void TreeView::drawTree()
+void TreeView::updateScene()
 {
-    treeScene()->drawTree();
+    treeScene()->redraw();
 }
 
-void TreeView::keyPressEvent(QKeyEvent *event)
+void TreeView::deleteSelectedNodes()
 {
-    if (event->key() == Qt::Key_Delete)
-        treeScene()->deleteSelectedNodes();
-    else
-        CustomGraphicsView::keyPressEvent(event);
+    treeScene()->deleteSelectedNodes();
 }
 
 TreeScene *TreeView::treeScene() const

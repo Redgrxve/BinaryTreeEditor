@@ -9,16 +9,17 @@ class TreeScene : public QGraphicsScene
 public:
     explicit TreeScene(QObject *parent = nullptr);
 
-    inline void setTree(BinaryTree *tree) { m_tree = tree; }
+    void setTree(BinaryTree *tree);
 
-    void update();
-    void drawTree();
+    void redraw();
+    void draw();
+
     void deleteSelectedNodes();
 
 private:
     void drawTree(TreeNode *root, int maxDepth, int x = 0, int y = 0, int depth = 0);
 
-    BinaryTree *m_tree;
+    BinaryTree *m_tree{};
 
     int m_xOffsetFactor = 30;
     int m_yOffsetFactor = 2;

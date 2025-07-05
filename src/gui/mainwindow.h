@@ -22,6 +22,10 @@ public:
 private:
     Ui::MainWindow *ui;
 
-    BinaryTree *m_tree;
+    BinaryTree *m_tree{};
+
+private slots:
+    void onAddNodeTriggered();
+    void onRemoveNodeTriggered();
 };
 #endif // MAINWINDOW_H

@@ -11,18 +11,11 @@ TreeNodeItem::TreeNodeItem(TreeNode* node, QGraphicsItem* parent)
 {
     setAcceptHoverEvents(true);
     setFlags(QGraphicsItem::ItemIsSelectable);
-    setupColors();
 
     setRect(0, 0, m_width, m_height);
 
-    m_textItem = new QGraphicsTextItem(QString::number(node->value), this);
-    m_textItem->setDefaultTextColor(pen().color());
-
-    const QRectF textRect = m_textItem->boundingRect();
-    const qreal  textPosX = (m_width - textRect.width()) * 0.5;
-    const qreal  textPosY = (m_height - textRect.height()) * 0.5;
-
-    m_textItem->setPos(textPosX, textPosY);
+    setupColors();
+    setupText();
 }
 
 void TreeNodeItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
@@ -54,4 +47,16 @@ void TreeNodeItem::setupColors()
 
     m_defaultColor = color;
     setPen(color);
+}
+
+void TreeNodeItem::setupText()
+{
+    m_textItem = new QGraphicsTextItem(QString::number(m_node->value), this);
+
+    const QRectF textRect = m_textItem->boundingRect();
+    const qreal textPosX = (m_width - textRect.width()) * 0.5;
+    const qreal textPosY = (m_height - textRect.height()) * 0.5;
+
+    m_textItem->setDefaultTextColor(pen().color());
+    m_textItem->setPos(textPosX, textPosY);
 }
