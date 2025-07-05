@@ -11,6 +11,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    ui->depthLcdNumber->setPalette(qApp->palette().color(QPalette::Text));
+
     connect(ui->addNodeAction, &QAction::triggered,
             this, &MainWindow::onAddNodeTriggered);
     connect(ui->removeNodeAction, &QAction::triggered,

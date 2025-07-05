@@ -131,15 +131,9 @@
     </property>
     <addaction name="paramsAction"/>
    </widget>
-   <widget class="QMenu" name="menu">
-    <property name="title">
-     <string>Справка</string>
-    </property>
-   </widget>
    <addaction name="fileMenu"/>
    <addaction name="toolsMenu"/>
    <addaction name="editMenu"/>
-   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
