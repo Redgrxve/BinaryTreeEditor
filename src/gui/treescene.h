@@ -21,7 +21,7 @@ private:
 
     BinaryTree *m_tree{};
 
-    int m_xOffsetFactor = 30;
+    int m_xOffsetFactor = 80;
     int m_yOffsetFactor = 2;
 };
 

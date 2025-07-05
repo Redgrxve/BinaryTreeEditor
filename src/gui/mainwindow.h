@@ -20,6 +20,9 @@ public:
     ~MainWindow();
 
 private:
+    void incrementDepthNumber();
+    void updateDepthNumber();
+
     Ui::MainWindow *ui;
 
     BinaryTree *m_tree{};
@@ -27,5 +30,7 @@ private:
 private slots:
     void onAddNodeTriggered();
     void onRemoveNodeTriggered();
+    void onScaleChanged(qreal scale);
+    void onSliderMoved(int pos);
 };
 #endif // MAINWINDOW_H
