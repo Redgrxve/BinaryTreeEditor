@@ -19,6 +19,7 @@ qt_add_executable(BinaryTreeEditor
     src/gui/treeview.h src/gui/treeview.cpp
     src/gui/treenodeitem.h src/gui/treenodeitem.cpp
     src/gui/treescene.h src/gui/treescene.cpp
+    src/utils/jsonserializer.h src/utils/jsonserializer.cpp
 
 )
 

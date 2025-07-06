@@ -36,6 +36,8 @@ private:
     QColor m_selectPenColor  = Qt::red;
 
     qreal m_textMargin = 5.0;
+
+    int m_fontSize = 14;
 };
 
 #endif // TREENODEITEM_H

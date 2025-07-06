@@ -1,10 +1,32 @@
 #include "binarytree.h"
+
+#include <QQueue>
 #include <qminmax.h>
+
+BinaryTree::BinaryTree(TreeNode *root)
+    : m_root(root) {}
 
 BinaryTree::BinaryTree(int root)
     : m_root(new TreeNode(root)) {}
 
-BinaryTree::~BinaryTree() {}
+BinaryTree::BinaryTree(const BinaryTree &other)
+{
+    clear();
+    m_root = copyTree(other.m_root);
+}
+
+BinaryTree::BinaryTree(BinaryTree &&other)
+{
+    clear();
+
+    m_root = other.m_root;
+    other.m_root = nullptr;
+}
+
+BinaryTree::~BinaryTree()
+{
+    clear();
+}
 
 bool BinaryTree::insert(int value)
 {
@@ -45,6 +67,48 @@ bool BinaryTree::remove(int value)
 int BinaryTree::depth() const
 {
     return getDepthRecursive(m_root);
+}
+
+void BinaryTree::clear()
+{
+    clearRecursive(m_root);
+    m_root = nullptr;
+}
+
+void BinaryTree::levelOrder(std::function<void(TreeNode *)> handle)
+{
+    if (!m_root) return;
+
+    QQueue<TreeNode *> queue;
+    queue.enqueue(m_root);
+
+    while (!queue.empty()) {
+        auto node = queue.dequeue();
+        handle(node);
+        if (node->left)
+            queue.enqueue(node->left);
+        if (node->right)
+            queue.enqueue(node->right);
+    }
+}
+
+BinaryTree &BinaryTree::operator=(const BinaryTree &other)
+{
+    if (this == &other) return *this;
+
+    clear();
+    m_root = copyTree(other.m_root);
+    return *this;
+}
+
+BinaryTree &BinaryTree::operator=(BinaryTree &&other)
+{
+    if (this == &other) return *this;
+
+    clear();
+    m_root = other.m_root;
+    other.m_root = nullptr;
+    return *this;
 }
 
 TreeNode *BinaryTree::insertRecursive(TreeNode *node, int value)
@@ -88,6 +152,26 @@ TreeNode *BinaryTree::removeRecursive(TreeNode *node, int value, bool &isFound)
     }
 
     return node;
+}
+
+void BinaryTree::clearRecursive(TreeNode *node)
+{
+    if (!node) return;
+
+    clearRecursive(node->left);
+    clearRecursive(node->right);
+    delete node;
+}
+
+TreeNode *BinaryTree::copyTree(const TreeNode *node)
+{
+    if (!node) return nullptr;
+
+    auto newNode = new TreeNode(node->value);
+    newNode->left  = copyTree(node->left);
+    newNode->right = copyTree(node->right);
+
+    return newNode;
 }
 
 TreeNode *BinaryTree::findMin(TreeNode *node) const

@@ -1,3 +1,4 @@
+#include "binarytree.h"
 #include "mainwindow.h"
 
 #include <QApplication>

@@ -124,7 +124,8 @@
     </property>
     <addaction name="addNodeAction"/>
     <addaction name="removeNodeAction"/>
-    <addaction name="action"/>
+    <addaction name="deleteTreeAction"/>
+    <addaction name="levelOrderAction"/>
    </widget>
    <widget class="QMenu" name="editMenu">
     <property name="title">
@@ -154,7 +155,8 @@
    <addaction name="separator"/>
    <addaction name="addNodeAction"/>
    <addaction name="removeNodeAction"/>
-   <addaction name="action"/>
+   <addaction name="deleteTreeAction"/>
+   <addaction name="levelOrderAction"/>
    <addaction name="separator"/>
    <addaction name="paramsAction"/>
   </widget>
@@ -239,12 +241,15 @@
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="action">
+  <action name="deleteTreeAction">
    <property name="icon">
     <iconset theme="QIcon::ThemeIcon::EditDelete"/>
    </property>
    <property name="text">
     <string>Удалить дерево</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+Del</string>
    </property>
   </action>
   <action name="saveAction">
@@ -253,6 +258,17 @@
    </property>
    <property name="text">
     <string>Сохранить</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="levelOrderAction">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::MediaPlaylistShuffle"/>
+   </property>
+   <property name="text">
+    <string>Обход в ширину</string>
    </property>
   </action>
  </widget>

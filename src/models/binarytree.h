@@ -1,6 +1,7 @@
 #ifndef BINARYTREE_H
 #define BINARYTREE_H
 
+#include <functional>
 #include <utility>
 
 struct TreeNode {
@@ -15,7 +16,10 @@ class BinaryTree
 { 
 public:
     BinaryTree() = default;
+    BinaryTree(TreeNode *root);
     BinaryTree(int root);
+    BinaryTree(const BinaryTree &other);
+    BinaryTree(BinaryTree &&other);
     ~BinaryTree();
 
     inline TreeNode *root() const { return m_root; }
@@ -25,11 +29,21 @@ public:
 
     int depth() const;
 
+    void clear();
+    void levelOrder(std::function<void(TreeNode *)> handle);
+
+    BinaryTree &operator=(const BinaryTree &other);
+    BinaryTree &operator=(BinaryTree &&other);
+
 private:
-    TreeNode *m_root = nullptr;
+    TreeNode *m_root{};
 
     TreeNode *insertRecursive(TreeNode *node, int value);
     TreeNode *removeRecursive(TreeNode *node, int value, bool &isFound);
+
+    void clearRecursive(TreeNode *node);
+
+    TreeNode *copyTree(const TreeNode *node);
 
     TreeNode *findMin(TreeNode *parent) const;
     TreeNode *findNode(TreeNode *current, int value) const;

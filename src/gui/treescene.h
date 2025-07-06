@@ -3,9 +3,14 @@
 
 #include "binarytree.h"
 #include <QGraphicsScene>
+#include <QHash>
+
+class TreeNodeItem;
 
 class TreeScene : public QGraphicsScene
 {
+    Q_OBJECT
+
 public:
     explicit TreeScene(QObject *parent = nullptr);
 
@@ -14,20 +19,32 @@ public:
     void redraw();
     void draw();
 
+    void deleteAllNodes();
     void deleteSelectedNodes();
+
+    void levelOrderAnimated();
 
 private:
     void drawFromModel();
     void drawTree(const std::unordered_map<TreeNode *, QPoint> &positions);
     void assignPositions(TreeNode *node, std::unordered_map<TreeNode *, QPoint> &positions, int &currentX, int depth = 0);
+    void deleteNodeItem(TreeNodeItem *nodeItem);
 
     BinaryTree *m_tree{};
+
+    QHash<TreeNode *, TreeNodeItem *> m_nodeMap;
 
     int m_nodeSpacingX = 80;
     int m_nodeSpacingY = 100;
 
     int m_nodeZValue = 1;
     int m_lineZValue = 0;
+
+    int m_animationDelay = 300;
+
+signals:
+    void animationStarted();
+    void animationEnded();
 };
 
 #endif // TREESCENE_H

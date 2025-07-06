@@ -8,15 +8,27 @@ class TreeScene;
 
 class TreeView : public CustomGraphicsView
 {
+    Q_OBJECT
+
 public:
     explicit TreeView(QWidget *parent = nullptr);
 
     void setTree(BinaryTree *tree);
     void updateScene();
     void deleteSelectedNodes();
+    void levelOrderAnimation();
 
 private:
     TreeScene *treeScene() const;
+
+signals:
+    void animationStarted();
+    void animationEnded();
+
+private slots:
+    void onAnimationStarted();
+    void onAnimationEnded();
 };
+
 
 #endif // TREEVIEW_H

@@ -30,7 +30,10 @@ private:
 private slots:
     void onAddNodeTriggered();
     void onRemoveNodeTriggered();
+    void onDeleteTreeTriggered();
     void onScaleChanged(qreal scale);
     void onSliderMoved(int pos);
+    void onAnimationStarted();
+    void onAnimationEnded();
 };
 #endif // MAINWINDOW_H

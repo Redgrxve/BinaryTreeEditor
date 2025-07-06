@@ -13,6 +13,9 @@ TreeNodeItem::TreeNodeItem(TreeNode* node, QGraphicsItem* parent)
     setFlags(QGraphicsItem::ItemIsSelectable);
 
     m_textItem = new QGraphicsTextItem(QString::number(m_node->value), this);
+    QFont font = m_textItem->font();
+    font.setPointSize(m_fontSize);
+    m_textItem->setFont(font);
 
     setupColors();
     setupRect();

@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "jsonserializer.h"
 #include "ui_mainwindow.h"
 
 #include <QGraphicsEllipseItem>
@@ -13,14 +14,28 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->depthLcdNumber->setPalette(qApp->palette().color(QPalette::Text));
 
+    TreeNode *root = JsonSerializer::loadFromFile("tree.json");
+    m_tree = new BinaryTree(root);
+    ui->treeView->setTree(m_tree);
+
     connect(ui->addNodeAction, &QAction::triggered,
             this, &MainWindow::onAddNodeTriggered);
     connect(ui->removeNodeAction, &QAction::triggered,
             this, &MainWindow::onRemoveNodeTriggered);
+    connect(ui->deleteTreeAction, &QAction::triggered,
+            this, &MainWindow::onDeleteTreeTriggered);
+    connect(ui->levelOrderAction, &QAction::triggered,
+            this, [this](){ui->treeView->levelOrderAnimation();});
+
     connect(ui->treeView, &TreeView::scaleChanged,
             this, &MainWindow::onScaleChanged);
     connect(ui->scaleSlider, &QSlider::sliderMoved,
             this, &MainWindow::onSliderMoved);
+
+    connect(ui->treeView, &TreeView::animationStarted,
+            this, &MainWindow::onAnimationStarted);
+    connect(ui->treeView, &TreeView::animationEnded,
+            this, &MainWindow::onAnimationEnded);
 }
 
 MainWindow::~MainWindow()
@@ -67,6 +82,15 @@ void MainWindow::onRemoveNodeTriggered()
     updateDepthNumber();
 }
 
+void MainWindow::onDeleteTreeTriggered()
+{
+    if (!m_tree) return;
+
+    m_tree->clear();
+    ui->treeView->updateScene();
+    updateDepthNumber();
+}
+
 void MainWindow::onScaleChanged(qreal scale)
 {
     const int value = static_cast<int>(scale * 100.0);
@@ -77,4 +101,24 @@ void MainWindow::onScaleChanged(qreal scale)
 void MainWindow::onSliderMoved(int pos)
 {
     ui->treeView->setScale(pos / 100.0);
+}
+
+void MainWindow::onAnimationStarted()
+{
+    ui->addNodeAction->setEnabled(false);
+    ui->removeNodeAction->setEnabled(false);
+    ui->deleteTreeAction->setEnabled(false);
+    ui->levelOrderAction->setEnabled(false);
+    ui->createReportAction->setEnabled(false);
+    ui->openAction->setEnabled(false);
+}
+
+void MainWindow::onAnimationEnded()
+{
+    ui->addNodeAction->setEnabled(true);
+    ui->removeNodeAction->setEnabled(true);
+    ui->deleteTreeAction->setEnabled(true);
+    ui->levelOrderAction->setEnabled(true);
+    ui->createReportAction->setEnabled(true);
+    ui->openAction->setEnabled(true);
 }
