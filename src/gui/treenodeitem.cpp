@@ -12,9 +12,10 @@ TreeNodeItem::TreeNodeItem(TreeNode* node, QGraphicsItem* parent)
     setAcceptHoverEvents(true);
     setFlags(QGraphicsItem::ItemIsSelectable);
 
-    setRect(0, 0, m_width, m_height);
+    m_textItem = new QGraphicsTextItem(QString::number(m_node->value), this);
 
     setupColors();
+    setupRect();
     setupText();
 }
 
@@ -34,7 +35,7 @@ void TreeNodeItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 void TreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QColor color = isSelected() ? m_selectColor : m_defaultColor;
+    const QColor color = isSelected() ? m_selectPenColor : m_defaultPenColor;
     setPen(color);
 
     QGraphicsEllipseItem::paint(painter, option, widget);
@@ -43,20 +44,31 @@ void TreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 void TreeNodeItem::setupColors()
 {
     const QPalette palette = qApp->palette();
-    const QColor   color   = palette.color(QPalette::Text);
+    const QColor   penColor   = palette.color(QPalette::Text);
+    const QColor   brushColor = palette.color(QPalette::Window);
 
-    m_defaultColor = color;
-    setPen(color);
+    m_defaultPenColor = penColor;
+    setPen(penColor);
+    setBrush(brushColor);
 }
 
 void TreeNodeItem::setupText()
 {
-    m_textItem = new QGraphicsTextItem(QString::number(m_node->value), this);
-
     const QRectF textRect = m_textItem->boundingRect();
-    const qreal textPosX = (m_width - textRect.width()) * 0.5;
-    const qreal textPosY = (m_height - textRect.height()) * 0.5;
+    const qreal textPosX = (rect().width() - textRect.width()) * 0.5;
+    const qreal textPosY = (rect().height() - textRect.height()) * 0.5;
 
-    m_textItem->setDefaultTextColor(pen().color());
+    m_textItem->setDefaultTextColor(m_defaultPenColor);
     m_textItem->setPos(textPosX, textPosY);
+}
+
+void TreeNodeItem::setupRect()
+{
+    const QRectF textRect = m_textItem->boundingRect();
+
+    const qreal width  = textRect.width() + m_textMargin;
+    const qreal height = textRect.height() + m_textMargin;
+    const qreal diameter = qMax(width, height);
+
+    setRect(0, 0, diameter, diameter);
 }

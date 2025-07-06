@@ -25,6 +25,9 @@ private:
 
     int m_nodeSpacingX = 80;
     int m_nodeSpacingY = 100;
+
+    int m_nodeZValue = 1;
+    int m_lineZValue = 0;
 };
 
 #endif // TREESCENE_H

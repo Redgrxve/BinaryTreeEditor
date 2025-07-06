@@ -27,15 +27,15 @@ protected:
 private:
     void setupColors();
     void setupText();
+    void setupRect();
 
     TreeNode *m_node{};
     QGraphicsTextItem *m_textItem{};
 
-    qreal m_width  = 40.0;
-    qreal m_height = 40.0;
+    QColor m_defaultPenColor = Qt::black;
+    QColor m_selectPenColor  = Qt::red;
 
-    QColor m_defaultColor = Qt::black;
-    QColor m_selectColor  = Qt::red;
+    qreal m_textMargin = 5.0;
 };
 
 #endif // TREENODEITEM_H

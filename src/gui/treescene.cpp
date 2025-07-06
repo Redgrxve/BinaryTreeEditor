@@ -65,6 +65,7 @@ void TreeScene::drawTree(const std::unordered_map<TreeNode *, QPoint> &positions
 
         auto item = new TreeNodeItem(node);
         item->setPos(x, y);
+        item->setZValue(m_nodeZValue);
         addItem(item);
         items[node] = item;
     }
@@ -72,12 +73,14 @@ void TreeScene::drawTree(const std::unordered_map<TreeNode *, QPoint> &positions
     const QPen pen(qApp->palette().color(QPalette::Text));
     for (const auto &[node, pos] : positions) {
         if (node->left) {
-            QLineF line(items[node]->center(), items[node->left]->center());
-            addLine(line, pen);
+            const QLineF lineF(items[node]->center(), items[node->left]->center());
+            auto line = addLine(lineF, pen);
+            line->setZValue(m_lineZValue);
         }
         if (node->right) {
-            QLineF line(items[node]->center(), items[node->right]->center());
-            addLine(line, pen);
+            const QLineF lineF(items[node]->center(), items[node->right]->center());
+            auto line = addLine(lineF, pen);
+            line->setZValue(m_lineZValue);
         }
     }
 }
