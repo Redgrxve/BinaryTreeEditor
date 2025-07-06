@@ -1,6 +1,9 @@
 #include "treescene.h"
 #include "treenodeitem.h"
 
+#include <QGuiApplication>
+#include <QPalette>
+
 TreeScene::TreeScene(QObject *parent)
     : QGraphicsScene{parent}
 {}
@@ -21,43 +24,8 @@ void TreeScene::draw()
 {
     if (!m_tree) return;
 
-    const int maxDepth = m_tree->depth();
-    drawTree(m_tree->root(), maxDepth);
-}
-
-void TreeScene::drawTree(TreeNode *root, int maxDepth, int x, int y, int depth)
-{
-    if (!root) return;
-
-    auto item = new TreeNodeItem(root);
-    item->setPos(x, y);
-    addItem(item);
-
-    const qreal w = item->width();
-    const qreal h = item->height();
-
-    const int xOffset = m_xOffsetFactor * (maxDepth - depth);
-    const int yOffset = w * m_yOffsetFactor;
-
-    if (root->left) {
-        drawTree(root->left, maxDepth, x - xOffset, y + yOffset, depth + 1);
-
-        const qreal x1 = x + w * 0.5;
-        const qreal y1 = y + h;
-        const qreal x2 = x - xOffset + w * 0.5;
-        const qreal y2 = y + yOffset;
-        addLine(x1, y1, x2, y2, item->pen());
-    }
-    if (root->right) {
-        drawTree(root->right, maxDepth, x + xOffset, y + yOffset, depth + 1);
-
-        const qreal x1 = x + w * 0.5;
-        const qreal y1 = y + h;
-        const qreal x2 = x + xOffset + w * 0.5;
-        const qreal y2 = y + yOffset;
-        addLine(x1, y1, x2, y2, item->pen());
-    }
-
+    drawFromModel();
+    setSceneRect(itemsBoundingRect());
 }
 
 void TreeScene::deleteSelectedNodes()
@@ -78,3 +46,50 @@ void TreeScene::deleteSelectedNodes()
 
     redraw();
 }
+
+void TreeScene::drawFromModel()
+{
+    int currentX = 0;
+    std::unordered_map<TreeNode *, QPoint> positions;
+    assignPositions(m_tree->root(), positions, currentX);
+    drawTree(positions);
+}
+
+void TreeScene::drawTree(const std::unordered_map<TreeNode *, QPoint> &positions)
+{
+    std::unordered_map<TreeNode *, TreeNodeItem *> items;
+
+    for (const auto &[node, pos] : positions) {
+        const int x = pos.x() * m_nodeSpacingX;
+        const int y = pos.y() * m_nodeSpacingY;
+
+        auto item = new TreeNodeItem(node);
+        item->setPos(x, y);
+        addItem(item);
+        items[node] = item;
+    }
+
+    const QPen pen(qApp->palette().color(QPalette::Text));
+    for (const auto &[node, pos] : positions) {
+        if (node->left) {
+            QLineF line(items[node]->center(), items[node->left]->center());
+            addLine(line, pen);
+        }
+        if (node->right) {
+            QLineF line(items[node]->center(), items[node->right]->center());
+            addLine(line, pen);
+        }
+    }
+}
+
+void TreeScene::assignPositions(TreeNode *node, std::unordered_map<TreeNode *, QPoint> &positions, int &currentX, int depth)
+{
+    if (!node) return;
+
+    assignPositions(node->left, positions, currentX, depth + 1);
+
+    positions[node] = QPoint(currentX++, depth);
+
+    assignPositions(node->right, positions, currentX, depth + 1);
+}
+

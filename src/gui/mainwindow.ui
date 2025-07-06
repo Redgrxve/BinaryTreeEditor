@@ -114,6 +114,7 @@
      <string>Файл</string>
     </property>
     <addaction name="openAction"/>
+    <addaction name="saveAction"/>
     <addaction name="saveAsAction"/>
     <addaction name="createReportAction"/>
    </widget>
@@ -147,6 +148,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="openAction"/>
+   <addaction name="saveAction"/>
    <addaction name="saveAsAction"/>
    <addaction name="createReportAction"/>
    <addaction name="separator"/>
@@ -243,6 +245,14 @@
    </property>
    <property name="text">
     <string>Удалить дерево</string>
+   </property>
+  </action>
+  <action name="saveAction">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentSave"/>
+   </property>
+   <property name="text">
+    <string>Сохранить</string>
    </property>
   </action>
  </widget>

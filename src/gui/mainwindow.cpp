@@ -64,6 +64,7 @@ void MainWindow::onAddNodeTriggered()
 void MainWindow::onRemoveNodeTriggered()
 {
     ui->treeView->deleteSelectedNodes();
+    updateDepthNumber();
 }
 
 void MainWindow::onScaleChanged(qreal scale)

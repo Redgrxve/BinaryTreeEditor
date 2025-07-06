@@ -14,11 +14,13 @@ TreeView::TreeView(QWidget *parent)
 void TreeView::setTree(BinaryTree *tree)
 {
     treeScene()->setTree(tree);
+    //fitInView(scene()->sceneRect(), Qt::KeepAspectRatio);
 }
 
 void TreeView::updateScene()
 {
     treeScene()->redraw();
+    //fitInView(scene()->sceneRect(), Qt::KeepAspectRatio);
 }
 
 void TreeView::deleteSelectedNodes()

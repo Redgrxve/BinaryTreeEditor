@@ -12,8 +12,9 @@ public:
 
     inline TreeNode *node() const { return m_node; }
 
-    inline qreal width()  const { return rect().width(); }
-    inline qreal height() const { return rect().height(); }
+    inline QPointF center() const { return pos() + boundingRect().center(); }
+    inline qreal width()    const { return boundingRect().width(); }
+    inline qreal height()   const { return boundingRect().height(); }
 
     inline QGraphicsTextItem *textItem() const { return m_textItem; }
 

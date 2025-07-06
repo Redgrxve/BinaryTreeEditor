@@ -17,12 +17,14 @@ public:
     void deleteSelectedNodes();
 
 private:
-    void drawTree(TreeNode *root, int maxDepth, int x = 0, int y = 0, int depth = 0);
+    void drawFromModel();
+    void drawTree(const std::unordered_map<TreeNode *, QPoint> &positions);
+    void assignPositions(TreeNode *node, std::unordered_map<TreeNode *, QPoint> &positions, int &currentX, int depth = 0);
 
     BinaryTree *m_tree{};
 
-    int m_xOffsetFactor = 80;
-    int m_yOffsetFactor = 2;
+    int m_nodeSpacingX = 80;
+    int m_nodeSpacingY = 100;
 };
 
 #endif // TREESCENE_H

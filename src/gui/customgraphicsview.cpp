@@ -25,7 +25,7 @@ void CustomGraphicsView::setScale(qreal value)
 void CustomGraphicsView::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::MiddleButton ||
-        event->button() == Qt::LeftButton && event->modifiers() & Qt::ControlModifier) {
+        event->button() == Qt::LeftButton && event->modifiers() & Qt::ShiftModifier) {
         m_isDragging = true;
         m_lastMousePos = event->pos();
         setCursor(Qt::ClosedHandCursor);
@@ -49,7 +49,7 @@ void CustomGraphicsView::mouseMoveEvent(QMouseEvent *event)
 void CustomGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::MiddleButton ||
-        event->button() == Qt::LeftButton && event->modifiers() & Qt::ControlModifier) {
+        event->button() == Qt::LeftButton && event->modifiers() & Qt::ShiftModifier) {
         m_isDragging = false;
         setCursor(Qt::ArrowCursor);
     } else {
