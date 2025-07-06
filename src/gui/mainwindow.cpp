@@ -175,8 +175,9 @@ void MainWindow::onReportTriggered()
                     <h1>Обход в ширину</h1>
                     <h1><h1>
     )";
-    for (const auto &img : std::as_const(images)) {
-        html.append(htmlImgTagFromImage(img) + "\n");
+    for (int i = 0; i < images.size(); ++i) {
+        html.append(QString("<h2>Шаг %1</h2>\n").arg(i));
+        html.append(htmlImgTagFromImage(images[i]) + "\n");
     }
     html.append("</body>\n</html>");
 
