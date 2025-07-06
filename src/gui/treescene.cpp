@@ -7,6 +7,7 @@
 #include <QPalette>
 #include <QQueue>
 #include <QTimer>
+#include <QPainter>
 
 TreeScene::TreeScene(QObject *parent)
     : QGraphicsScene{parent}
@@ -116,6 +117,50 @@ void TreeScene::resetNodesColor()
     for(TreeNodeItem *item : std::as_const(m_nodeMap)) {
         item->resetColor();
     }
+}
+
+QImage TreeScene::toImage()
+{
+    QRectF sceneRect = itemsBoundingRect().adjusted(-10, -10, 10, 10);
+    QSize imageSize = sceneRect.size().toSize();
+
+    if (imageSize.isEmpty())
+        return QImage();
+
+    QImage image(imageSize, QImage::Format_ARGB32);
+    image.fill(qApp->palette().color(QPalette::Window));
+
+    QPainter painter(&image);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::TextAntialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+
+    render(&painter, QRectF(QPointF(0, 0), imageSize), sceneRect);
+    return image;
+}
+
+QVector<QImage> TreeScene::levelOrderToImages()
+{
+    if (!m_tree || !m_tree->root())
+        return QVector<QImage>();
+
+    const QVector<QVector<TreeNode *>> levels = m_tree->levelOrderNodes();
+    if (levels.empty())
+        return QVector<QImage>();
+
+    QVector<QImage> result;
+    result.reserve(levels.size());
+
+    for (const auto &level : levels) {
+        for (TreeNode *node : level) {
+            if (m_nodeMap.contains(node))
+                m_nodeMap[node]->setBrush(QBrush(m_levelOrderColor));
+        }
+        result.push_back(toImage());
+    }
+
+    resetNodesColor();
+    return result;
 }
 
 void TreeScene::drawFromModel()

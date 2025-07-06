@@ -37,6 +37,16 @@ void TreeView::levelOrderAnimation()
     treeScene()->levelOrderAnimated();
 }
 
+QVector<QImage> TreeView::levelOrderToImages()
+{
+    return treeScene()->levelOrderToImages();
+}
+
+QImage TreeView::toImage() const
+{
+    return treeScene()->toImage();
+}
+
 TreeScene *TreeView::treeScene() const
 {
     return static_cast<TreeScene *>(scene());

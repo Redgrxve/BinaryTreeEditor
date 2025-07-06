@@ -79,17 +79,47 @@ void BinaryTree::levelOrder(std::function<void(TreeNode *)> handle)
 {
     if (!m_root) return;
 
-    QQueue<TreeNode *> queue;
-    queue.enqueue(m_root);
+    QQueue<TreeNode *> q;
+    q.enqueue(m_root);
 
-    while (!queue.empty()) {
-        auto node = queue.dequeue();
+    while (!q.empty()) {
+        auto node = q.dequeue();
         handle(node);
         if (node->left)
-            queue.enqueue(node->left);
+            q.enqueue(node->left);
         if (node->right)
-            queue.enqueue(node->right);
+            q.enqueue(node->right);
     }
+}
+
+QVector<QVector<TreeNode *>> BinaryTree::levelOrderNodes() const
+{
+    QVector<QVector<TreeNode*>> result{};
+    if (!m_root) return result;
+
+    QQueue<TreeNode*> q;
+    q.enqueue(m_root);
+
+    while (!q.empty()) {
+        const size_t levelSize = q.size();
+        QVector<TreeNode*> currentLevel;
+        currentLevel.reserve(levelSize);
+
+        for (size_t i = 0; i < levelSize; ++i) {
+            TreeNode* node = q.front();
+            q.dequeue();
+            currentLevel.push_back(node);
+
+            if (node->left)
+                q.enqueue(node->left);
+            if (node->right)
+                q.enqueue(node->right);
+        }
+
+        result.push_back(std::move(currentLevel));
+    }
+
+    return result;
 }
 
 BinaryTree &BinaryTree::operator=(const BinaryTree &other)

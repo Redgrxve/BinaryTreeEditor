@@ -2,6 +2,7 @@
 #define BINARYTREE_H
 
 #include <functional>
+#include <qcontainerfwd.h>
 #include <utility>
 
 struct TreeNode {
@@ -31,6 +32,8 @@ public:
 
     void clear();
     void levelOrder(std::function<void(TreeNode *)> handle);
+
+    QVector<QVector<TreeNode *>> levelOrderNodes() const;
 
     BinaryTree &operator=(const BinaryTree &other);
     BinaryTree &operator=(BinaryTree &&other);

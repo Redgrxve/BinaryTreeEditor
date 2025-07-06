@@ -18,6 +18,9 @@ public:
     void deleteSelectedNodes();
     void levelOrderAnimation();
 
+    QVector<QImage> levelOrderToImages();
+    QImage toImage() const;
+
 private:
     TreeScene *treeScene() const;
 

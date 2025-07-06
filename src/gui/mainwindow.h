@@ -36,6 +36,7 @@ private slots:
     void onOpenTriggered();
     void onSaveTriggered();
     void onSaveAsTriggered();
+    void onReportTriggered();
 
     void onScaleChanged(qreal scale);
     void onSliderMoved(int pos);

@@ -26,6 +26,9 @@ public:
     void levelOrderAnimated();
     void resetNodesColor();
 
+    QImage toImage();
+    QVector<QImage> levelOrderToImages();
+
 private:
     void drawFromModel();
     void drawTree(const std::unordered_map<TreeNode *, QPoint> &positions);

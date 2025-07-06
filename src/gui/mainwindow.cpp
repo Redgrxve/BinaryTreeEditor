@@ -1,11 +1,13 @@
 #include "mainwindow.h"
 #include "jsonserializer.h"
+#include "utils.h"
 #include "ui_mainwindow.h"
 
 #include <QGraphicsEllipseItem>
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QTextBrowser>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -33,6 +35,8 @@ MainWindow::MainWindow(QWidget *parent)
             this, &MainWindow::onSaveTriggered);
     connect(ui->saveAsAction, &QAction::triggered,
             this, &MainWindow::onSaveAsTriggered);
+    connect(ui->createReportAction, &QAction::triggered,
+            this, &MainWindow::onReportTriggered);
 
     connect(ui->treeView, &TreeView::scaleChanged,
             this, &MainWindow::onScaleChanged);
@@ -93,6 +97,12 @@ void MainWindow::onDeleteTreeTriggered()
 {
     if (!m_tree) return;
 
+    QMessageBox::StandardButton reply = QMessageBox::question(this,
+                                                              "Подтверждение удаления",
+                                                              "Вы действительно хотите удалить дерево?",
+                                                              QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::No) return;
+
     m_tree->clear();
     ui->treeView->updateScene();
     updateDepthNumber();
@@ -146,6 +156,42 @@ void MainWindow::onSaveAsTriggered()
     else {
         QMessageBox::critical(this, tr("Ошибка при сохранении файла"), tr("Не удалось создать файл"));
     }
+}
+
+void MainWindow::onReportTriggered()
+{
+    QVector<QImage> images = ui->treeView->levelOrderToImages();
+    if (images.empty()) return;
+
+    for (int i = 0; i < images.size(); ++i) {
+        images[i].save(QString("l%1.png").arg(i), "PNG", 100);
+    }
+
+    QString html = R"(
+                    <!DOCTYPE html>
+                    <html>
+                    <head><meta charset="UTF-8"><title>Обход в ширину</title></head>
+                    <body style="font-family: sans-serif; text-align: center;">
+                    <h1>Обход в ширину</h1>
+                    <h1><h1>
+    )";
+    for (const auto &img : std::as_const(images)) {
+        html.append(htmlImgTagFromImage(img) + "\n");
+    }
+    html.append("</body>\n</html>");
+
+    const QString fileName = "levelOrder.html";
+    if (!saveHtmlToFile(html, fileName)) {
+        QMessageBox::critical(this, tr("Ошибка при создании отчета"), tr("Не удалось создать отчет"));
+        return;
+    }
+
+    ui->statusbar->showMessage(tr("Создан отчет: ") + fileName);
+
+    auto textBrowser = new QTextBrowser;
+    textBrowser->setWindowTitle("Отчет");
+    textBrowser->setSource(fileName);
+    textBrowser->showMaximized();
 }
 
 void MainWindow::onScaleChanged(qreal scale)
