@@ -10,7 +10,12 @@
 
 TreeScene::TreeScene(QObject *parent)
     : QGraphicsScene{parent}
-{}
+{
+    connect(this, &TreeScene::animationStarted,
+            this, &TreeScene::onAnimationStarted);
+    connect(this, &TreeScene::animationEnded,
+            this, &TreeScene::onAnimationEnded);
+}
 
 void TreeScene::setTree(BinaryTree *tree)
 {
@@ -50,6 +55,24 @@ void TreeScene::deleteSelectedNodes()
     redraw();
 }
 
+void TreeScene::levelOrder(std::function<void (TreeNodeItem *)> handle)
+{
+    if (!m_tree || !m_tree->root()) return;
+
+    std::vector<TreeNode *> nodes;
+    nodes.reserve(m_nodeMap.size());
+    const auto handler = [&nodes](TreeNode *node) {
+        nodes.push_back(node);
+    };
+
+    m_tree->levelOrder(handler);
+
+    for (TreeNode *node : nodes) {
+        if (m_nodeMap.contains(node))
+            handle(m_nodeMap[node]);
+    }
+}
+
 void TreeScene::levelOrderAnimated()
 {
     if (!m_tree || !m_tree->root()) return;
@@ -65,7 +88,6 @@ void TreeScene::levelOrderAnimated()
     auto timer = new QTimer(this);
     int index = 0;
 
-    clearSelection();
     emit animationStarted();
 
     connect(timer, &QTimer::timeout, this, [=]() mutable {
@@ -73,7 +95,6 @@ void TreeScene::levelOrderAnimated()
             timer->stop();
             timer->deleteLater();
 
-            redraw();
             emit animationEnded();
 
             return;
@@ -81,13 +102,20 @@ void TreeScene::levelOrderAnimated()
 
         TreeNode* node = nodes[index];
         if (m_nodeMap.contains(node)) {
-            m_nodeMap[node]->setBrush(QBrush(Qt::blue));
+            m_nodeMap[node]->setBrush(QBrush(m_levelOrderColor));
         }
 
         ++index;
     });
 
     timer->start(m_animationDelay);
+}
+
+void TreeScene::resetNodesColor()
+{
+    for(TreeNodeItem *item : std::as_const(m_nodeMap)) {
+        item->resetColor();
+    }
 }
 
 void TreeScene::drawFromModel()
@@ -147,5 +175,15 @@ void TreeScene::deleteNodeItem(TreeNodeItem *nodeItem)
     m_tree->remove(node->value);
     m_nodeMap.remove(node);
     delete nodeItem;
+}
+
+void TreeScene::onAnimationStarted()
+{
+    clearSelection();
+}
+
+void TreeScene::onAnimationEnded()
+{
+    resetNodesColor();
 }
 

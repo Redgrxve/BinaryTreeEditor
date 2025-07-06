@@ -9,7 +9,7 @@ bool JsonSerializer::saveToFile(TreeNode* root, const QString& filePath)
     QJsonDocument doc(json);
 
     QFile file(filePath);
-    if (!file.open(QIODevice::WriteOnly)) {
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         qWarning() << "Не удалось открыть файл для записи:" << file.errorString();
         return false;
     }

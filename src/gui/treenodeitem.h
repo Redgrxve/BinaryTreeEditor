@@ -18,6 +18,8 @@ public:
 
     inline QGraphicsTextItem *textItem() const { return m_textItem; }
 
+    void resetColor();
+
 protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
@@ -32,6 +34,7 @@ private:
     TreeNode *m_node{};
     QGraphicsTextItem *m_textItem{};
 
+    QColor m_defaultBrushColor = Qt::white;
     QColor m_defaultPenColor = Qt::black;
     QColor m_selectPenColor  = Qt::red;
 

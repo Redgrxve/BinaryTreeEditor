@@ -22,7 +22,9 @@ public:
     void deleteAllNodes();
     void deleteSelectedNodes();
 
+    void levelOrder(std::function<void(TreeNodeItem *)> handle);
     void levelOrderAnimated();
+    void resetNodesColor();
 
 private:
     void drawFromModel();
@@ -42,9 +44,15 @@ private:
 
     int m_animationDelay = 300;
 
+    QColor m_levelOrderColor = Qt::blue;
+
 signals:
     void animationStarted();
     void animationEnded();
+
+private slots:
+    void onAnimationStarted();
+    void onAnimationEnded();
 };
 
 #endif // TREESCENE_H

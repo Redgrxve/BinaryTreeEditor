@@ -22,6 +22,12 @@ TreeNodeItem::TreeNodeItem(TreeNode* node, QGraphicsItem* parent)
     setupText();
 }
 
+void TreeNodeItem::resetColor()
+{
+    setPen(m_defaultPenColor);
+    setBrush(m_defaultBrushColor);
+}
+
 void TreeNodeItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     setCursor(Qt::PointingHandCursor);
@@ -47,12 +53,11 @@ void TreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 void TreeNodeItem::setupColors()
 {
     const QPalette palette = qApp->palette();
-    const QColor   penColor   = palette.color(QPalette::Text);
-    const QColor   brushColor = palette.color(QPalette::Window);
+    m_defaultPenColor   = palette.color(QPalette::Text);
+    m_defaultBrushColor = palette.color(QPalette::Window);
 
-    m_defaultPenColor = penColor;
-    setPen(penColor);
-    setBrush(brushColor);
+    setPen(m_defaultPenColor);
+    setBrush(m_defaultBrushColor);
 }
 
 void TreeNodeItem::setupText()

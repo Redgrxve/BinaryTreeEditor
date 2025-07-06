@@ -27,12 +27,19 @@ private:
 
     BinaryTree *m_tree{};
 
+    QString m_currentFilePath{};
+
 private slots:
     void onAddNodeTriggered();
     void onRemoveNodeTriggered();
     void onDeleteTreeTriggered();
+    void onOpenTriggered();
+    void onSaveTriggered();
+    void onSaveAsTriggered();
+
     void onScaleChanged(qreal scale);
     void onSliderMoved(int pos);
+
     void onAnimationStarted();
     void onAnimationEnded();
 };

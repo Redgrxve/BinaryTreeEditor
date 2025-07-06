@@ -5,6 +5,7 @@
 #include <QGraphicsEllipseItem>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,9 +15,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->depthLcdNumber->setPalette(qApp->palette().color(QPalette::Text));
 
-    TreeNode *root = JsonSerializer::loadFromFile("tree.json");
-    m_tree = new BinaryTree(root);
-    ui->treeView->setTree(m_tree);
+    // TreeNode *root = JsonSerializer::loadFromFile("tree.json");
+    // m_tree = new BinaryTree(root);
+    // ui->treeView->setTree(m_tree);
 
     connect(ui->addNodeAction, &QAction::triggered,
             this, &MainWindow::onAddNodeTriggered);
@@ -26,6 +27,12 @@ MainWindow::MainWindow(QWidget *parent)
             this, &MainWindow::onDeleteTreeTriggered);
     connect(ui->levelOrderAction, &QAction::triggered,
             this, [this](){ui->treeView->levelOrderAnimation();});
+    connect(ui->openAction, &QAction::triggered,
+            this, &MainWindow::onOpenTriggered);
+    connect(ui->saveAction, &QAction::triggered,
+            this, &MainWindow::onSaveTriggered);
+    connect(ui->saveAsAction, &QAction::triggered,
+            this, &MainWindow::onSaveAsTriggered);
 
     connect(ui->treeView, &TreeView::scaleChanged,
             this, &MainWindow::onScaleChanged);
@@ -89,6 +96,56 @@ void MainWindow::onDeleteTreeTriggered()
     m_tree->clear();
     ui->treeView->updateScene();
     updateDepthNumber();
+}
+
+void MainWindow::onOpenTriggered()
+{
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Открыть файл дерева"), "", tr("JSON файлы (*.json)"));
+    if (filePath.isEmpty()) return;
+
+    TreeNode *root = JsonSerializer::loadFromFile(filePath);
+    if (!root) return;
+
+    if (m_tree)
+        delete m_tree;
+
+    m_tree = new BinaryTree(root);
+    ui->treeView->setTree(m_tree);
+
+    m_currentFilePath = filePath;
+    updateDepthNumber();
+    ui->statusbar->showMessage(tr("Загружен файл: ") + filePath);
+}
+
+void MainWindow::onSaveTriggered()
+{
+    if (!m_tree) return;
+
+    if (m_currentFilePath.isEmpty()) {
+        onSaveAsTriggered();
+        return;
+    }
+
+    if (JsonSerializer::saveToFile(m_tree->root(), m_currentFilePath))
+        ui->statusbar->showMessage(tr("Сохранен файл: ") + m_currentFilePath);
+    else
+        QMessageBox::critical(this, tr("Ошибка при сохранении файла"), tr("Не удалось открыть файл"));
+}
+
+void MainWindow::onSaveAsTriggered()
+{
+    if (!m_tree) return;
+
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Открыть файл дерева"), "tree.json", tr("JSON файл (*.json)"));
+    if (filePath.isEmpty()) return;
+
+    if (JsonSerializer::saveToFile(m_tree->root(), filePath)) {
+        m_currentFilePath = filePath;
+        ui->statusbar->showMessage(tr("Сохранен файл: ") + m_currentFilePath);
+    }
+    else {
+        QMessageBox::critical(this, tr("Ошибка при сохранении файла"), tr("Не удалось создать файл"));
+    }
 }
 
 void MainWindow::onScaleChanged(qreal scale)
