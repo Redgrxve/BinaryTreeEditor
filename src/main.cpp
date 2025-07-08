@@ -14,6 +14,11 @@ int main(int argc, char *argv[])
     }
 
     MainWindow w;
+    if (a.arguments().count() > 1) {
+        QString filePath = a.arguments().at(1);;
+        w.loadTreeFromFile(filePath);
+    }
+
     w.showMaximized();
     return a.exec();
 }

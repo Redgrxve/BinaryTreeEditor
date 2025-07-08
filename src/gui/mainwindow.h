@@ -19,9 +19,12 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void loadTreeFromFile(const QString &filePath);
+
 private:
     void incrementDepthNumber();
     void updateDepthNumber();
+    void removeHint();
 
     Ui::MainWindow *ui;
 
@@ -30,13 +33,13 @@ private:
     QString m_currentFilePath{};
 
 private slots:
-    void onAddNodeTriggered();
-    void onRemoveNodeTriggered();
-    void onDeleteTreeTriggered();
-    void onOpenTriggered();
-    void onSaveTriggered();
-    void onSaveAsTriggered();
-    void onReportTriggered();
+    void onAddNode();
+    void onRemoveNode();
+    void onDeleteTree();
+    void onOpen();
+    void onSave();
+    void onSaveAs();
+    void onCreateReport();
 
     void onScaleChanged(qreal scale);
     void onSliderMoved(int pos);

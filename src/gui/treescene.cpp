@@ -174,10 +174,10 @@ void TreeScene::drawFromModel()
 void TreeScene::drawTree(const std::unordered_map<TreeNode *, QPoint> &positions)
 {
     for (const auto &[node, pos] : positions) {
+        auto item = new TreeNodeItem(node);
         const int x = pos.x() * m_nodeSpacingX;
         const int y = pos.y() * m_nodeSpacingY;
 
-        auto item = new TreeNodeItem(node);
         item->setPos(x, y);
         item->setZValue(m_nodeZValue);
         addItem(item);

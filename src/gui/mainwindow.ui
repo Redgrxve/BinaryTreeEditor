@@ -96,7 +96,26 @@
      </layout>
     </item>
     <item row="1" column="0">
-     <widget class="TreeView" name="treeView"/>
+     <widget class="QLabel" name="hintLabel">
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Нажмите Ctrl + A для вставки нового узла или Ctrl + O для открытия файла</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="TreeView" name="treeView">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

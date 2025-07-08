@@ -22,21 +22,21 @@ MainWindow::MainWindow(QWidget *parent)
     // ui->treeView->setTree(m_tree);
 
     connect(ui->addNodeAction, &QAction::triggered,
-            this, &MainWindow::onAddNodeTriggered);
+            this, &MainWindow::onAddNode);
     connect(ui->removeNodeAction, &QAction::triggered,
-            this, &MainWindow::onRemoveNodeTriggered);
+            this, &MainWindow::onRemoveNode);
     connect(ui->deleteTreeAction, &QAction::triggered,
-            this, &MainWindow::onDeleteTreeTriggered);
+            this, &MainWindow::onDeleteTree);
     connect(ui->levelOrderAction, &QAction::triggered,
             this, [this](){ui->treeView->levelOrderAnimation();});
     connect(ui->openAction, &QAction::triggered,
-            this, &MainWindow::onOpenTriggered);
+            this, &MainWindow::onOpen);
     connect(ui->saveAction, &QAction::triggered,
-            this, &MainWindow::onSaveTriggered);
+            this, &MainWindow::onSave);
     connect(ui->saveAsAction, &QAction::triggered,
-            this, &MainWindow::onSaveAsTriggered);
+            this, &MainWindow::onSaveAs);
     connect(ui->createReportAction, &QAction::triggered,
-            this, &MainWindow::onReportTriggered);
+            this, &MainWindow::onCreateReport);
 
     connect(ui->treeView, &TreeView::scaleChanged,
             this, &MainWindow::onScaleChanged);
@@ -55,62 +55,8 @@ MainWindow::~MainWindow()
     delete m_tree;
 }
 
-void MainWindow::incrementDepthNumber()
+void MainWindow::loadTreeFromFile(const QString &filePath)
 {
-    const int curr = ui->depthLcdNumber->intValue();
-    ui->depthLcdNumber->display(curr + 1);
-}
-
-void MainWindow::updateDepthNumber()
-{
-    ui->depthLcdNumber->display(m_tree->depth());
-}
-
-void MainWindow::onAddNodeTriggered()
-{
-    bool ok = false;
-    int value = QInputDialog::getInt(this, tr("Вставка нового узла"), tr("Значение: "), 0, INT_MIN, INT_MAX, 1, &ok);
-    if (!ok) return;
-
-    if (!m_tree) {
-        m_tree = new BinaryTree(value);
-        ui->treeView->setTree(m_tree);
-        updateDepthNumber();
-        return;
-    }
-
-    if (!m_tree->insert(value))
-        QMessageBox::critical(this, tr("Ошибка при вставке значения"), tr("Данное значение уже есть в дереве!"));
-    else {
-        ui->treeView->updateScene();
-        updateDepthNumber();
-    }
-}
-
-void MainWindow::onRemoveNodeTriggered()
-{
-    ui->treeView->deleteSelectedNodes();
-    updateDepthNumber();
-}
-
-void MainWindow::onDeleteTreeTriggered()
-{
-    if (!m_tree) return;
-
-    QMessageBox::StandardButton reply = QMessageBox::question(this,
-                                                              "Подтверждение удаления",
-                                                              "Вы действительно хотите удалить дерево?",
-                                                              QMessageBox::Yes | QMessageBox::No);
-    if (reply == QMessageBox::No) return;
-
-    m_tree->clear();
-    ui->treeView->updateScene();
-    updateDepthNumber();
-}
-
-void MainWindow::onOpenTriggered()
-{
-    QString filePath = QFileDialog::getOpenFileName(this, tr("Открыть файл дерева"), "", tr("JSON файлы (*.json)"));
     if (filePath.isEmpty()) return;
 
     TreeNode *root = JsonSerializer::loadFromFile(filePath);
@@ -127,12 +73,97 @@ void MainWindow::onOpenTriggered()
     ui->statusbar->showMessage(tr("Загружен файл: ") + filePath);
 }
 
-void MainWindow::onSaveTriggered()
+
+void MainWindow::incrementDepthNumber()
+{
+    const int curr = ui->depthLcdNumber->intValue();
+    ui->depthLcdNumber->display(curr + 1);
+}
+
+void MainWindow::updateDepthNumber()
+{
+    ui->depthLcdNumber->display(m_tree->depth());
+}
+
+void MainWindow::removeHint()
+{
+    if (!ui->hintLabel) return;
+
+    delete ui->hintLabel;
+    ui->hintLabel = nullptr;
+}
+
+void MainWindow::onAddNode()
+{
+    bool ok = false;
+    int value = QInputDialog::getInt(this, tr("Вставка нового узла"), tr("Значение: "), 0, INT_MIN, INT_MAX, 1, &ok);
+    if (!ok) return;
+
+    if (!m_tree) {
+        m_tree = new BinaryTree(value);
+        ui->treeView->setTree(m_tree);
+        updateDepthNumber();
+        removeHint();
+        return;
+    }
+
+    if (!m_tree->insert(value))
+        QMessageBox::critical(this, tr("Ошибка при вставке значения"), tr("Данное значение уже есть в дереве!"));
+    else {
+        ui->treeView->updateScene();
+        updateDepthNumber();
+        removeHint();
+    }
+}
+
+void MainWindow::onRemoveNode()
+{
+    ui->treeView->deleteSelectedNodes();
+    updateDepthNumber();
+}
+
+void MainWindow::onDeleteTree()
+{
+    if (!m_tree) return;
+
+    QMessageBox::StandardButton reply = QMessageBox::question(this,
+                                                              "Подтверждение удаления",
+                                                              "Вы действительно хотите удалить дерево?",
+                                                              QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::No) return;
+
+    m_tree->clear();
+    ui->treeView->updateScene();
+    updateDepthNumber();
+}
+
+void MainWindow::onOpen()
+{
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Открыть файл дерева"), "", tr("BinTree файл (*.btr)"));
+    if (filePath.isEmpty()) return;
+
+    TreeNode *root = JsonSerializer::loadFromFile(filePath);
+    if (!root) return;
+
+    if (m_tree)
+        delete m_tree;
+
+    m_tree = new BinaryTree(root);
+    ui->treeView->setTree(m_tree);
+
+    m_currentFilePath = filePath;
+
+    updateDepthNumber();
+    removeHint();
+    ui->statusbar->showMessage(tr("Загружен файл: ") + filePath);
+}
+
+void MainWindow::onSave()
 {
     if (!m_tree) return;
 
     if (m_currentFilePath.isEmpty()) {
-        onSaveAsTriggered();
+        onSaveAs();
         return;
     }
 
@@ -142,11 +173,11 @@ void MainWindow::onSaveTriggered()
         QMessageBox::critical(this, tr("Ошибка при сохранении файла"), tr("Не удалось открыть файл"));
 }
 
-void MainWindow::onSaveAsTriggered()
+void MainWindow::onSaveAs()
 {
     if (!m_tree) return;
 
-    QString filePath = QFileDialog::getSaveFileName(this, tr("Открыть файл дерева"), "tree.json", tr("JSON файл (*.json)"));
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Открыть файл дерева"), "", tr("BinTree файл (*.btr)"));
     if (filePath.isEmpty()) return;
 
     if (JsonSerializer::saveToFile(m_tree->root(), filePath)) {
@@ -158,7 +189,7 @@ void MainWindow::onSaveAsTriggered()
     }
 }
 
-void MainWindow::onReportTriggered()
+void MainWindow::onCreateReport()
 {
     QVector<QImage> images = ui->treeView->levelOrderToImages();
     if (images.empty()) return;
@@ -176,7 +207,7 @@ void MainWindow::onReportTriggered()
                     <h1><h1>
     )";
     for (int i = 0; i < images.size(); ++i) {
-        html.append(QString("<h2>Шаг %1</h2>\n").arg(i));
+        html.append(QString("<h2>Шаг %1</h2>\n").arg(i + 1));
         html.append(htmlImgTagFromImage(images[i]) + "\n");
     }
     html.append("</body>\n</html>");
