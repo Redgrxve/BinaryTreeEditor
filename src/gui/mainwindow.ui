@@ -127,20 +127,19 @@
     <addaction name="deleteTreeAction"/>
     <addaction name="levelOrderAction"/>
    </widget>
-   <widget class="QMenu" name="editMenu">
-    <property name="title">
-     <string>Правка</string>
-    </property>
-    <addaction name="paramsAction"/>
-   </widget>
    <addaction name="fileMenu"/>
    <addaction name="toolsMenu"/>
-   <addaction name="editMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>Панель инструментов</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>36</width>
+     <height>36</height>
+    </size>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -155,10 +154,9 @@
    <addaction name="separator"/>
    <addaction name="addNodeAction"/>
    <addaction name="removeNodeAction"/>
-   <addaction name="deleteTreeAction"/>
    <addaction name="levelOrderAction"/>
+   <addaction name="deleteTreeAction"/>
    <addaction name="separator"/>
-   <addaction name="paramsAction"/>
   </widget>
   <action name="createReportAction">
    <property name="icon">
@@ -183,20 +181,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
-   </property>
-  </action>
-  <action name="paramsAction">
-   <property name="icon">
-    <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
-   </property>
-   <property name="text">
-    <string>Настройки</string>
-   </property>
-   <property name="toolTip">
-    <string>Настройки</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+O</string>
    </property>
   </action>
   <action name="addNodeAction">
