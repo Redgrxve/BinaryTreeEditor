@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QTextBrowser>
+#include <QWebEngineView>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -199,12 +200,18 @@ void MainWindow::onCreateReport()
     }
 
     QString html = R"(
-                    <!DOCTYPE html>
-                    <html>
-                    <head><meta charset="UTF-8"><title>Обход в ширину</title></head>
-                    <body style="font-family: sans-serif; text-align: center;">
-                    <h1>Обход в ширину</h1>
-                    <h1><h1>
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Обход в ширину</title>
+            <style>
+                body { font-family: sans-serif; text-align: center; }
+                img { max-width: 90%; margin: 10px auto; display: block; }
+            </style>
+        </head>
+        <body>
+            <h1>Обход в ширину</h1>
     )";
     for (int i = 0; i < images.size(); ++i) {
         html.append(QString("<h2>Шаг %1</h2>\n").arg(i + 1));
@@ -220,10 +227,17 @@ void MainWindow::onCreateReport()
 
     ui->statusbar->showMessage(tr("Создан отчет: ") + fileName);
 
-    auto textBrowser = new QTextBrowser;
-    textBrowser->setWindowTitle("Отчет");
-    textBrowser->setSource(fileName);
-    textBrowser->showMaximized();
+    QFileInfo fileInfo(fileName);
+    if (!fileInfo.exists()) {
+        QMessageBox::critical(this, "Ошибка", "Файл отчёта не найден!");
+        return;
+    }
+
+    auto webView = new QWebEngineView();
+    webView->setAttribute(Qt::WA_DeleteOnClose);
+    webView->setWindowTitle("Отчет");
+    webView->load(QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
+    webView->showMaximized();
 }
 
 void MainWindow::onScaleChanged(qreal scale)
