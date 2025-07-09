@@ -106,8 +106,8 @@ QString MainWindow::generateHtmlReport()
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
                 body { font-family: 'Roboto', sans-serif; }
-                .info { background-color: #bdc3c7; padding: 10px 20px; }
-                h1, h2 { color: #2980b9; }
+                .info { background-color: #bdc3c7; padding: 10px 20px;}
+                h1, h2 { color: #2980b9; text-align: center;}
                 .step { text-align: center; }
             </style>
         </head>
@@ -227,7 +227,7 @@ void MainWindow::onSaveAs()
 {
     if (!m_tree) return;
 
-    const QString filePath = QFileDialog::getSaveFileName(this, tr("Сохранить файл дерева"), "", tr("BinTree файл (*.btr)"));
+    const QString filePath = QFileDialog::getSaveFileName(this, tr("Сохранить файл дерева"), "tree.btr", tr("BinTree файл (*.btr)"));
     if (filePath.isEmpty()) return;
 
     if (JsonSerializer::saveToFile(m_tree->root(), filePath)) {
@@ -247,7 +247,7 @@ void MainWindow::onCreateReport()
         return;
     }
 
-    const QString filePath = QFileDialog::getSaveFileName(this, tr("Сохранить отчет"), "", tr("HTML-файл (*.html)"));
+    const QString filePath = QFileDialog::getSaveFileName(this, tr("Сохранить отчет"), "report.html", tr("HTML-файл (*.html)"));
     if (filePath.isEmpty()) return;
 
     if (!saveHtmlToFile(html, filePath)) {
