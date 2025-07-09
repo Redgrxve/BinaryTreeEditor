@@ -20,6 +20,9 @@ public:
     ~MainWindow();
 
     void loadTreeFromFile(const QString &filePath);
+    void openReportInWebView(const QString &filePath);
+
+    QString generateHtmlReport();
 
 private:
     void incrementDepthNumber();
@@ -40,6 +43,7 @@ private slots:
     void onSave();
     void onSaveAs();
     void onCreateReport();
+    void onOpenReport();
 
     void onScaleChanged(qreal scale);
     void onSliderMoved(int pos);

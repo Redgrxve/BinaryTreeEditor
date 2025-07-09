@@ -18,10 +18,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->depthLcdNumber->setPalette(qApp->palette().color(QPalette::Text));
 
-    // TreeNode *root = JsonSerializer::loadFromFile("tree.json");
-    // m_tree = new BinaryTree(root);
-    // ui->treeView->setTree(m_tree);
-
     connect(ui->addNodeAction, &QAction::triggered,
             this, &MainWindow::onAddNode);
     connect(ui->removeNodeAction, &QAction::triggered,
@@ -38,6 +34,8 @@ MainWindow::MainWindow(QWidget *parent)
             this, &MainWindow::onSaveAs);
     connect(ui->createReportAction, &QAction::triggered,
             this, &MainWindow::onCreateReport);
+    connect(ui->openReportAction, &QAction::triggered,
+            this, &MainWindow::onOpenReport);
 
     connect(ui->treeView, &TreeView::scaleChanged,
             this, &MainWindow::onScaleChanged);
@@ -72,6 +70,72 @@ void MainWindow::loadTreeFromFile(const QString &filePath)
     m_currentFilePath = filePath;
     updateDepthNumber();
     ui->statusbar->showMessage(tr("Загружен файл: ") + filePath);
+    removeHint();
+}
+
+void MainWindow::openReportInWebView(const QString &filePath)
+{
+    QFileInfo fileInfo(filePath);
+    if (!fileInfo.exists()) {
+        QMessageBox::critical(this, "Ошибка", "Файл отчёта не найден!");
+        return;
+    }
+
+    auto webView = new QWebEngineView();
+    webView->setAttribute(Qt::WA_DeleteOnClose);
+    webView->setWindowTitle("Отчет");
+    webView->load(QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
+    webView->showMaximized();
+}
+
+QString MainWindow::generateHtmlReport()
+{
+    QImage initialImage = ui->treeView->toImage();
+    QVector<QImage> stepImages = ui->treeView->levelOrderToImages();
+    if (stepImages.empty()) return QString();
+
+    const int depth = ui->depthLcdNumber->intValue();
+    const QDateTime time = QDateTime::currentDateTime();
+
+    QString html = QString(R"(
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Обход в ширину</title>
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+                body { font-family: 'Roboto', sans-serif; }
+                .info { background-color: #bdc3c7; padding: 10px 20px; }
+                h1, h2 { color: #2980b9; }
+                .step { text-align: center; }
+            </style>
+        </head>
+        <body>
+            <h1>Отчет об обходе бинарного дерева</h1>
+            <div class="info">
+                <p>Глубина дерева: %1</p>
+                <p>Тип обхода: в ширину (по уровням)</p>
+                <p>Дата создания: %2</p>
+            </div>
+            <div class="step">
+                <h2>Исходное дерево</h2>
+                %3
+                <h2>Процесс обхода</h2>
+            </div>
+    )").arg(QString::number(depth), time.toString("dd.MM.yyyy HH:mm"), htmlImgTagFromImage(initialImage));
+    for (int i = 0; i < stepImages.size(); ++i) {
+        const QString step = QString(R"(
+            <div class="step">
+                <h3>Уровень %1</h3>
+                %2
+            </div>
+        )").arg(QString::number(i + 1), htmlImgTagFromImage(stepImages[i]));
+        html.append(step);
+    }
+    html.append("</body>\n</html>");
+
+    return html;
 }
 
 
@@ -140,23 +204,8 @@ void MainWindow::onDeleteTree()
 
 void MainWindow::onOpen()
 {
-    QString filePath = QFileDialog::getOpenFileName(this, tr("Открыть файл дерева"), "", tr("BinTree файл (*.btr)"));
-    if (filePath.isEmpty()) return;
-
-    TreeNode *root = JsonSerializer::loadFromFile(filePath);
-    if (!root) return;
-
-    if (m_tree)
-        delete m_tree;
-
-    m_tree = new BinaryTree(root);
-    ui->treeView->setTree(m_tree);
-
-    m_currentFilePath = filePath;
-
-    updateDepthNumber();
-    removeHint();
-    ui->statusbar->showMessage(tr("Загружен файл: ") + filePath);
+    const QString filePath = QFileDialog::getOpenFileName(this, tr("Открыть файл дерева"), "", tr("BinTree файл (*.btr)"));
+    loadTreeFromFile(filePath);
 }
 
 void MainWindow::onSave()
@@ -178,7 +227,7 @@ void MainWindow::onSaveAs()
 {
     if (!m_tree) return;
 
-    QString filePath = QFileDialog::getSaveFileName(this, tr("Открыть файл дерева"), "", tr("BinTree файл (*.btr)"));
+    const QString filePath = QFileDialog::getSaveFileName(this, tr("Сохранить файл дерева"), "", tr("BinTree файл (*.btr)"));
     if (filePath.isEmpty()) return;
 
     if (JsonSerializer::saveToFile(m_tree->root(), filePath)) {
@@ -192,52 +241,31 @@ void MainWindow::onSaveAs()
 
 void MainWindow::onCreateReport()
 {
-    QVector<QImage> images = ui->treeView->levelOrderToImages();
-    if (images.empty()) return;
-
-    for (int i = 0; i < images.size(); ++i) {
-        images[i].save(QString("l%1.png").arg(i), "PNG", 100);
-    }
-
-    QString html = R"(
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <title>Обход в ширину</title>
-            <style>
-                body { font-family: sans-serif; text-align: center; }
-                img { max-width: 90%; margin: 10px auto; display: block; }
-            </style>
-        </head>
-        <body>
-            <h1>Обход в ширину</h1>
-    )";
-    for (int i = 0; i < images.size(); ++i) {
-        html.append(QString("<h2>Шаг %1</h2>\n").arg(i + 1));
-        html.append(htmlImgTagFromImage(images[i]) + "\n");
-    }
-    html.append("</body>\n</html>");
-
-    const QString fileName = "levelOrder.html";
-    if (!saveHtmlToFile(html, fileName)) {
-        QMessageBox::critical(this, tr("Ошибка при создании отчета"), tr("Не удалось создать отчет"));
+    const QString html = generateHtmlReport();
+    if (html.isEmpty()) {
+        QMessageBox::warning(this, tr("Предупреждение"), tr("Перед созданием отчета необходимо заполнить дерево"));
         return;
     }
 
-    ui->statusbar->showMessage(tr("Создан отчет: ") + fileName);
+    const QString filePath = QFileDialog::getSaveFileName(this, tr("Сохранить отчет"), "", tr("HTML-файл (*.html)"));
+    if (filePath.isEmpty()) return;
 
-    QFileInfo fileInfo(fileName);
-    if (!fileInfo.exists()) {
-        QMessageBox::critical(this, "Ошибка", "Файл отчёта не найден!");
+    if (!saveHtmlToFile(html, filePath)) {
+        QMessageBox::critical(this, tr("Ошибка при сохранении отчета"), tr("Не удалось сохранить отчет"));
         return;
     }
 
-    auto webView = new QWebEngineView();
-    webView->setAttribute(Qt::WA_DeleteOnClose);
-    webView->setWindowTitle("Отчет");
-    webView->load(QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
-    webView->showMaximized();
+    ui->statusbar->showMessage(tr("Создан отчет: ") + filePath);
+
+    openReportInWebView(filePath);
+}
+
+void MainWindow::onOpenReport()
+{
+    const QString filePath = QFileDialog::getOpenFileName(this, tr("Открыть файл отчета"), "", tr("HTML-файл (*.html)"));
+    if (filePath.isEmpty()) return;
+
+    openReportInWebView(filePath);
 }
 
 void MainWindow::onScaleChanged(qreal scale)
