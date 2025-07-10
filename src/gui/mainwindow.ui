@@ -125,7 +125,7 @@
      <x>0</x>
      <y>0</y>
      <width>1077</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="fileMenu">
@@ -146,6 +146,7 @@
     <addaction name="removeNodeAction"/>
     <addaction name="deleteTreeAction"/>
     <addaction name="levelOrderAction"/>
+    <addaction name="paintAction"/>
    </widget>
    <addaction name="fileMenu"/>
    <addaction name="toolsMenu"/>
@@ -186,6 +187,8 @@
    <addaction name="removeNodeAction"/>
    <addaction name="levelOrderAction"/>
    <addaction name="deleteTreeAction"/>
+   <addaction name="separator"/>
+   <addaction name="paintAction"/>
   </widget>
   <action name="createReportAction">
    <property name="icon">
@@ -293,6 +296,14 @@
    </property>
    <property name="toolTip">
     <string>Открыть файл отчета</string>
+   </property>
+  </action>
+  <action name="paintAction">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::MailMessageNew"/>
+   </property>
+   <property name="text">
+    <string>Рисование</string>
    </property>
   </action>
  </widget>

@@ -17,8 +17,9 @@ TreeNodeItem::TreeNodeItem(TreeNode* node, QGraphicsItem* parent)
     font.setPointSize(m_fontSize);
     m_textItem->setFont(font);
 
+    setRect(0, 0, m_diameter, m_diameter);
+
     setupColors();
-    setupRect();
     setupText();
 }
 
@@ -62,21 +63,40 @@ void TreeNodeItem::setupColors()
 
 void TreeNodeItem::setupText()
 {
-    const QRectF textRect = m_textItem->boundingRect();
+    if (!m_textItem) return;
+
+    const QString text = m_textItem->toPlainText();
+
+    const qreal padding = 3.0;
+    const qreal diameter = rect().width();
+
+    QFont font = m_textItem->font();
+
+    for (; m_fontSize >= m_minFontSize; --m_fontSize) {
+        font.setPointSize(m_fontSize);
+        QFontMetricsF fm(font);
+
+        QRectF textRect = fm.boundingRect(text);
+        if (textRect.width() + padding * 2 <= diameter &&
+            textRect.height() + padding * 2 <= diameter)
+        {
+            break;
+        }
+    }
+
+    font.setPointSize(m_fontSize);
+    m_textItem->setFont(font);
+    m_textItem->setDefaultTextColor(m_defaultPenColor);
+
+    QRectF textRect = m_textItem->boundingRect();
+
     const qreal textPosX = (rect().width() - textRect.width()) * 0.5;
     const qreal textPosY = (rect().height() - textRect.height()) * 0.5;
 
-    m_textItem->setDefaultTextColor(m_defaultPenColor);
     m_textItem->setPos(textPosX, textPosY);
 }
 
 void TreeNodeItem::setupRect()
 {
-    const QRectF textRect = m_textItem->boundingRect();
 
-    const qreal width  = textRect.width() + m_textMargin;
-    const qreal height = textRect.height() + m_textMargin;
-    const qreal diameter = qMax(width, height);
-
-    setRect(0, 0, diameter, diameter);
 }
