@@ -125,7 +125,7 @@
      <x>0</x>
      <y>0</y>
      <width>1077</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="fileMenu">
@@ -133,8 +133,10 @@
      <string>Файл</string>
     </property>
     <addaction name="openAction"/>
+    <addaction name="separator"/>
     <addaction name="saveAction"/>
     <addaction name="saveAsAction"/>
+    <addaction name="separator"/>
     <addaction name="createReportAction"/>
     <addaction name="openReportAction"/>
    </widget>
@@ -146,6 +148,7 @@
     <addaction name="removeNodeAction"/>
     <addaction name="deleteTreeAction"/>
     <addaction name="levelOrderAction"/>
+    <addaction name="separator"/>
     <addaction name="paintAction"/>
    </widget>
    <addaction name="fileMenu"/>
@@ -286,6 +289,9 @@
    <property name="text">
     <string>Обход в ширину</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
   </action>
   <action name="openReportAction">
    <property name="icon">
@@ -297,13 +303,19 @@
    <property name="toolTip">
     <string>Открыть файл отчета</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+O</string>
+   </property>
   </action>
   <action name="paintAction">
    <property name="icon">
-    <iconset theme="emblem-photos"/>
+    <iconset theme="applications-graphics"/>
    </property>
    <property name="text">
     <string>Рисование</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
    </property>
   </action>
  </widget>

@@ -88,6 +88,7 @@ void MainWindow::openReportInWebView(const QString &filePath)
     webView->setAttribute(Qt::WA_DeleteOnClose);
     webView->setWindowTitle("Отчет");
     webView->load(QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
+    webView->setFocus();
     webView->showMaximized();
 }
 
