@@ -18,6 +18,8 @@ public:
 private:
     Ui::PaintWidget *ui;
 
+    void updateColorButton();
+
 private slots:
     void onChangeColor();
     void onClear();

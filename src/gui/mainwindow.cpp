@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "jsonserializer.h"
 #include "utils.h"
+#include "paintwidget.h"
 #include "ui_mainwindow.h"
 
 #include <QGraphicsEllipseItem>
@@ -36,6 +37,8 @@ MainWindow::MainWindow(QWidget *parent)
             this, &MainWindow::onCreateReport);
     connect(ui->openReportAction, &QAction::triggered,
             this, &MainWindow::onOpenReport);
+    connect(ui->paintAction, &QAction::triggered,
+            this, &MainWindow::onPaint);
 
     connect(ui->treeView, &TreeView::scaleChanged,
             this, &MainWindow::onScaleChanged);
@@ -183,8 +186,25 @@ void MainWindow::onAddNode()
 
 void MainWindow::onRemoveNode()
 {
-    ui->treeView->deleteSelectedNodes();
-    updateDepthNumber();
+    if (!m_tree || !m_tree->root())
+        return;
+
+    if (!ui->treeView->isItemsSelected()) {
+        bool ok = false;
+        int value = QInputDialog::getInt(this, tr("Удаление узла"), tr("Значение удаляемого узла: "), 0, INT_MIN, INT_MAX, 1, &ok);
+        if (!ok) return;
+
+        if (!m_tree->remove(value)) {
+            QMessageBox::critical(this, tr("Ошибка при удалении узла"), tr("Такого узла нет в дереве"));
+            return;
+        }
+
+        ui->treeView->updateScene();
+        updateDepthNumber();
+    } else {
+        ui->treeView->deleteSelectedNodes();
+        updateDepthNumber();
+    }
 }
 
 void MainWindow::onDeleteTree()
@@ -266,6 +286,13 @@ void MainWindow::onOpenReport()
     if (filePath.isEmpty()) return;
 
     openReportInWebView(filePath);
+}
+
+void MainWindow::onPaint()
+{
+    auto *paintWidget = new PaintWidget;
+    paintWidget->setAttribute(Qt::WA_DeleteOnClose);
+    paintWidget->show();
 }
 
 void MainWindow::onScaleChanged(qreal scale)

@@ -300,7 +300,7 @@
   </action>
   <action name="paintAction">
    <property name="icon">
-    <iconset theme="QIcon::ThemeIcon::MailMessageNew"/>
+    <iconset theme="emblem-photos"/>
    </property>
    <property name="text">
     <string>Рисование</string>

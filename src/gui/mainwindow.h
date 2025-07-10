@@ -44,6 +44,7 @@ private slots:
     void onSaveAs();
     void onCreateReport();
     void onOpenReport();
+    void onPaint();
 
     void onScaleChanged(qreal scale);
     void onSliderMoved(int pos);

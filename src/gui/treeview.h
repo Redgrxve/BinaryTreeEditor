@@ -2,9 +2,10 @@
 #define TREEVIEW_H
 
 #include "customgraphicsview.h"
-#include "binarytree.h"
+#include "treescene.h"
 
 class TreeScene;
+class TreeNodeItem;
 
 class TreeView : public CustomGraphicsView
 {
@@ -13,16 +14,42 @@ class TreeView : public CustomGraphicsView
 public:
     explicit TreeView(QWidget *parent = nullptr);
 
-    void setTree(BinaryTree *tree);
-    void updateScene();
-    void deleteSelectedNodes();
-    void levelOrderAnimation();
+    inline void setTree(BinaryTree *tree) {
+        treeScene()->setTree(tree);
+    }
 
-    QVector<QImage> levelOrderToImages();
-    QImage toImage() const;
+    inline void updateScene() {
+        treeScene()->redraw();
+    }
+
+    inline void deleteSelectedNodes() {
+        treeScene()->deleteSelectedNodes();
+    }
+
+    inline void levelOrderAnimation() {
+        treeScene()->levelOrderAnimated();
+    }
+
+    inline QVector<QGraphicsItem *> selectedItems() const {
+        return scene()->selectedItems();
+    }
+
+    inline bool isItemsSelected() const {
+        return !scene()->selectedItems().isEmpty();
+    }
+
+    inline QVector<QImage> levelOrderToImages() const {
+        return treeScene()->levelOrderToImages();
+    }
+
+    inline QImage toImage() const {
+        return treeScene()->toImage();
+    }
 
 private:
-    TreeScene *treeScene() const;
+    inline TreeScene *treeScene() const {
+        return static_cast<TreeScene *>(scene());
+    }
 
 signals:
     void animationStarted();
