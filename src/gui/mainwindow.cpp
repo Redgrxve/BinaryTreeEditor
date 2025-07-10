@@ -196,11 +196,10 @@ void MainWindow::onRemoveNode()
 
         if (!m_tree->remove(value)) {
             QMessageBox::critical(this, tr("Ошибка при удалении узла"), tr("Такого узла нет в дереве"));
-            return;
+        } else {
+            ui->treeView->updateScene();
+            updateDepthNumber();
         }
-
-        ui->treeView->updateScene();
-        updateDepthNumber();
     } else {
         ui->treeView->deleteSelectedNodes();
         updateDepthNumber();

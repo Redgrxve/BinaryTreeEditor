@@ -1,6 +1,4 @@
-#include "binarytree.h"
 #include "mainwindow.h"
-#include "paintwidget.h".h"
 
 #include <QApplication>
 #include <QTranslator>
