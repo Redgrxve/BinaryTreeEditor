@@ -88,7 +88,7 @@ void TreeNodeItem::setupText()
     m_textItem->setFont(font);
     m_textItem->setDefaultTextColor(m_defaultPenColor);
 
-    QRectF textRect = m_textItem->boundingRect();
+    const QRectF textRect = m_textItem->boundingRect();
 
     const qreal textPosX = (rect().width() - textRect.width()) * 0.5;
     const qreal textPosY = (rect().height() - textRect.height()) * 0.5;

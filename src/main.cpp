@@ -1,5 +1,6 @@
 #include "binarytree.h"
 #include "mainwindow.h"
+#include "paintwidget.h".h"
 
 #include <QApplication>
 #include <QTranslator>
@@ -13,12 +14,13 @@ int main(int argc, char *argv[])
         a.installTranslator(&qtTranslator);
     }
 
-    MainWindow w;
-    if (a.arguments().count() > 1) {
-        QString filePath = a.arguments().at(1);;
-        w.loadTreeFromFile(filePath);
-    }
+    PaintWidget w;
+    // MainWindow w;
+    // if (a.arguments().count() > 1) {
+    //     QString filePath = a.arguments().at(1);;
+    //     w.loadTreeFromFile(filePath);
+    // }
 
-    w.showMaximized();
+    w.show();
     return a.exec();
 }

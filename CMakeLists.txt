@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.19)
 project(BinaryTreeEditor LANGUAGES CXX)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets WebEngineWidgets)
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 qt_standard_project_setup()
 
@@ -21,9 +22,13 @@ qt_add_executable(BinaryTreeEditor
     src/gui/treescene.h src/gui/treescene.cpp
     src/utils/jsonserializer.h src/utils/jsonserializer.cpp
     src/utils/utils.h
+    src/gui/paintwidget.h src/gui/paintwidget.cpp src/gui/paintwidget.ui
+    src/gui/paintview.h src/gui/paintview.cpp
 
 )
 
+
+target_link_libraries(BinaryTreeEditor PRIVATE Qt6::Widgets)
 target_include_directories(${PROJECT_NAME}
     PRIVATE
         src/gui
