@@ -10,6 +10,28 @@ PaintView::PaintView(QWidget *parent)
     setAttribute(Qt::WA_AttributeCount);
 }
 
+bool PaintView::loadImage(const QString &filePath)
+{
+    QImage loadedImage;
+    if (!loadedImage.load(filePath))
+        return false;
+
+    loadedImage = loadedImage.convertToFormat(QImage::Format_RGB32);
+
+    QImage newImage(size(), QImage::Format_RGB32);
+    newImage.fill(Qt::white);
+
+    QPainter painter(&newImage);
+    painter.drawImage(0, 0, loadedImage);
+    painter.end();
+
+    m_image = std::move(newImage);
+    resize(m_image.size());
+    update();
+
+    return true;
+}
+
 void PaintView::clear()
 {
     m_image.fill(Qt::white);

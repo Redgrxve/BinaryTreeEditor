@@ -9,6 +9,8 @@ class PaintView : public QWidget
 public:
     explicit PaintView(QWidget *parent = nullptr);
 
+    bool loadImage(const QString &filePath);
+
     inline void setPenColor(const QColor &color) { m_penColor = color; }
     inline const QColor &penColor() const { return m_penColor; }
 

@@ -95,6 +95,8 @@ void MainWindow::openReportInWebView(const QString &filePath)
 QString MainWindow::generateHtmlReport()
 {
     QImage initialImage = ui->treeView->toImage();
+    if (initialImage.isNull()) return QString();
+
     QVector<QImage> stepImages = ui->treeView->levelOrderToImages();
     if (stepImages.empty()) return QString();
 

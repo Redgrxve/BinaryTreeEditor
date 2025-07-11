@@ -23,6 +23,8 @@ private:
 private slots:
     void onChangeColor();
     void onClear();
+    void onOpen();
+    void onSave();
 };
 
 #endif // PAINTWIDGET_H
