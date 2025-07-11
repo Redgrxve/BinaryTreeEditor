@@ -26,7 +26,7 @@ private:
 
     QImage m_image;
     QPoint m_lastPoint;
-    QColor m_penColor = Qt::black;
+    QColor m_penColor = Qt::red;
     bool m_isDrawing = false;
 };
 
