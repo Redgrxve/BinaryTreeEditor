@@ -11,6 +11,8 @@ public:
 
     bool loadImage(const QString &filePath);
 
+    inline const QImage &image() const { return m_image; }
+
     inline void setPenColor(const QColor &color) { m_penColor = color; }
     inline const QColor &penColor() const { return m_penColor; }
 

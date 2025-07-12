@@ -249,7 +249,7 @@ void MainWindow::onSaveAs()
 {
     if (!m_tree) return;
 
-    const QString filePath = QFileDialog::getSaveFileName(this, tr("Сохранить файл дерева"), "tree.btr", tr("BinTree файл (*.btr)"));
+    const QString filePath = QFileDialog::getSaveFileName(this, tr("Сохранить файл дерева"), "дерево.btr", tr("BinTree файл (*.btr)"));
     if (filePath.isEmpty()) return;
 
     if (JsonSerializer::saveToFile(m_tree->root(), filePath)) {
@@ -269,7 +269,7 @@ void MainWindow::onCreateReport()
         return;
     }
 
-    const QString filePath = QFileDialog::getSaveFileName(this, tr("Сохранить отчет"), "report.html", tr("HTML-файл (*.html)"));
+    const QString filePath = QFileDialog::getSaveFileName(this, tr("Сохранить отчет"), "отчет.html", tr("HTML-файл (*.html)"));
     if (filePath.isEmpty()) return;
 
     if (!saveHtmlToFile(html, filePath)) {

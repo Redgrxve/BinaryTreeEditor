@@ -62,5 +62,9 @@ void PaintWidget::onOpen()
 
 void PaintWidget::onSave()
 {
+    const QString filePath = QFileDialog::getSaveFileName(this, tr("Сохранить изображение"), "картинка.jpg", tr("JPEG (*.jpg)"));
+    if (filePath.isEmpty()) return;
 
+    const auto image = ui->paintView->image();
+    image.save(filePath, "jpg", 100);
 }
