@@ -18,6 +18,6 @@ int main(int argc, char *argv[])
         w.loadTreeFromFile(filePath);
     }
 
-    w.show();
+    w.showMaximized();
     return a.exec();
 }
