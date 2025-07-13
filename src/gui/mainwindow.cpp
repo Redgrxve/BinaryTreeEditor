@@ -10,6 +10,7 @@
 #include <QFileDialog>
 #include <QTextBrowser>
 #include <QWebEngineView>
+#include <QDir>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -18,6 +19,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     ui->depthLcdNumber->setPalette(qApp->palette().color(QPalette::Text));
+
+    QDir dir;
+    dir.mkdir("images");
 
     connect(ui->addNodeAction, &QAction::triggered,
             this, &MainWindow::onAddNode);
@@ -97,8 +101,15 @@ QString MainWindow::generateHtmlReport()
     QImage initialImage = ui->treeView->toImage();
     if (initialImage.isNull()) return QString();
 
+    initialImage.save("images/исходное дерево.jpg", "jpg", 100);
+
     QVector<QImage> stepImages = ui->treeView->levelOrderToImages();
     if (stepImages.empty()) return QString();
+
+    for (int i = 0; i < stepImages.size(); ++i) {
+        QString filePath = QString("images/Уровень_%1.jpg").arg(i + 1);
+        stepImages[i].save(filePath, "jpg", 100);
+    }
 
     const int depth = ui->depthLcdNumber->intValue();
     const QDateTime time = QDateTime::currentDateTime();
